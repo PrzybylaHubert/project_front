@@ -1,5 +1,16 @@
 # Planer Nauki - raport z heurystyk Nielsena
 
+## Jak uruchomić projekt
+
+```bash
+npm install
+npm run dev
+```
+
+Po uruchomieniu aplikacja będzie dostępna pod adresem:
+
+http://localhost:5173/
+
 ## Opis projektu
 
 Projekt przedstawia prosty interfejs aplikacji webowej **Planer Nauki** napisanej w Vue.js. Aplikacja nie wymaga backendu i zapisuje dane w `localStorage`, dzięki czemu po odświeżeniu strony użytkownik nadal widzi swoje plany.
