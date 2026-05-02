@@ -7,10 +7,8 @@ const LAST_REMOVED_KEY = 'planer-nauki-ostatnio-usuniety'
 const activeView = ref('dashboard')
 const plans = ref([])
 const lastRemoved = ref(null)
-const status = ref({
-  type: 'info',
-  text: 'Gotowe. Wybierz akcje z menu.',
-})
+const status = ref(null)
+let statusTimer = null
 const form = ref({
   subject: '',
   topic: '',
@@ -93,10 +91,7 @@ watch(
 function setView(viewId) {
   activeView.value = viewId
   errors.value = {}
-  status.value = {
-    type: 'info',
-    text: `Widok zmieniony: ${views.find((view) => view.id === viewId).label}.`,
-  }
+  clearStatus()
 }
 
 function validateForm() {
@@ -126,10 +121,10 @@ function validateForm() {
 
 function submitPlan() {
   if (!validateForm()) {
-    status.value = {
+    showStatus({
       type: 'error',
       text: 'Nie zapisano planu. Popraw pola oznaczone komunikatem.',
-    }
+    })
     return
   }
 
@@ -146,10 +141,10 @@ function submitPlan() {
   plans.value.push(newPlan)
   lastRemoved.value = null
   resetForm()
-  status.value = {
+  showStatus({
     type: 'success',
     text: 'Plan zapisany. Mozesz go sprawdzic w podsumowaniu.',
-  }
+  })
   activeView.value = 'summary'
 }
 
@@ -166,10 +161,10 @@ function resetForm() {
 
 function cancelForm() {
   resetForm()
-  status.value = {
+  showStatus({
     type: 'info',
     text: 'Wprowadzanie anulowane. Formularz zostal wyczyszczony.',
-  }
+  })
   activeView.value = 'dashboard'
 }
 
@@ -182,10 +177,10 @@ function removePlan(planId) {
 
   plans.value = plans.value.filter((item) => item.id !== planId)
   lastRemoved.value = plan
-  status.value = {
+  showStatus({
     type: 'warning',
     text: 'Plan usuniety. Mozesz cofnac te operacje.',
-  }
+  })
 }
 
 function undoRemove() {
@@ -195,10 +190,10 @@ function undoRemove() {
 
   plans.value.push(lastRemoved.value)
   lastRemoved.value = null
-  status.value = {
+  showStatus({
     type: 'success',
     text: 'Cofnieto usuniecie planu.',
-  }
+  })
 }
 
 function addSamplePlans() {
@@ -209,19 +204,34 @@ function addSamplePlans() {
   }))
 
   plans.value.push(...samples)
-  status.value = {
+  showStatus({
     type: 'success',
     text: 'Dodano przykladowe plany nauki.',
-  }
+  })
 }
 
 function clearAllPlans() {
   plans.value = []
   lastRemoved.value = null
-  status.value = {
+  showStatus({
     type: 'warning',
     text: 'Wyczyszczono wszystkie plany.',
-  }
+  })
+}
+
+function showStatus(nextStatus) {
+  clearTimeout(statusTimer)
+  status.value = nextStatus
+  statusTimer = setTimeout(() => {
+    status.value = null
+    statusTimer = null
+  }, 5000)
+}
+
+function clearStatus() {
+  clearTimeout(statusTimer)
+  status.value = null
+  statusTimer = null
 }
 
 function formatDate(date) {
@@ -255,8 +265,7 @@ function formatDate(date) {
     </header>
 
     <main>
-      <section :class="['system-status', status.type]" aria-live="polite">
-        <strong>Status:</strong>
+      <section v-if="status" :class="['system-status', status.type]" aria-live="polite">
         <span>{{ status.text }}</span>
         <button
           v-if="lastRemoved"
