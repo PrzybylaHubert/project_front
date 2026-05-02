@@ -112,7 +112,7 @@ function validateForm() {
   }
 
   if (!form.value.duration || Number(form.value.duration) < 15) {
-    nextErrors.duration = 'Czas nauki musi miec co najmniej 15 minut.'
+    nextErrors.duration = 'Czas nauki musi mieć co najmniej 15 minut.'
   }
 
   errors.value = nextErrors
