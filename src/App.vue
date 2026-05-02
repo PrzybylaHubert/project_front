@@ -2,7 +2,7 @@
 import { computed, onMounted, ref, watch } from 'vue'
 
 const STORAGE_KEY = 'planer-nauki-plany'
-const LAST_REMOVED_KEY = 'planer-nauki-ostatnio-usuniety'
+const LAST_REMOVED_KEY = 'planer-nauki-ostatnio-usunięty'
 
 const activeView = ref('dashboard')
 const plans = ref([])
@@ -14,7 +14,7 @@ const form = ref({
   topic: '',
   date: '',
   duration: 45,
-  priority: 'Sredni',
+  priority: 'Średni',
 })
 const errors = ref({})
 
@@ -50,7 +50,7 @@ const samplePlans = computed(() => [
     topic: 'Komponenty Vue',
     date: today.value,
     duration: 45,
-    priority: 'Sredni',
+    priority: 'Średni',
   },
 ])
 
@@ -98,7 +98,7 @@ function validateForm() {
   const nextErrors = {}
 
   if (!form.value.subject.trim()) {
-    nextErrors.subject = 'Wpisz nazwe przedmiotu.'
+    nextErrors.subject = 'Wpisz nazwę przedmiotu.'
   }
 
   if (!form.value.topic.trim()) {
@@ -108,7 +108,7 @@ function validateForm() {
   if (!form.value.date) {
     nextErrors.date = 'Wybierz termin nauki.'
   } else if (form.value.date < today.value) {
-    nextErrors.date = 'Termin nie moze byc z przeszlosci.'
+    nextErrors.date = 'Termin nie może być z przeszłości.'
   }
 
   if (!form.value.duration || Number(form.value.duration) < 15) {
@@ -143,7 +143,7 @@ function submitPlan() {
   resetForm()
   showStatus({
     type: 'success',
-    text: 'Plan zapisany. Mozesz go sprawdzic w podsumowaniu.',
+    text: 'Plan zapisany. Możesz go sprawdzić w podsumowaniu.',
   })
   activeView.value = 'summary'
 }
@@ -154,7 +154,7 @@ function resetForm() {
     topic: '',
     date: '',
     duration: 45,
-    priority: 'Sredni',
+    priority: 'Średni',
   }
   errors.value = {}
 }
@@ -163,7 +163,7 @@ function cancelForm() {
   resetForm()
   showStatus({
     type: 'info',
-    text: 'Wprowadzanie anulowane. Formularz zostal wyczyszczony.',
+    text: 'Wprowadzanie anulowane. Formularz został wyczyszczony.',
   })
   activeView.value = 'dashboard'
 }
@@ -179,7 +179,7 @@ function removePlan(planId) {
   lastRemoved.value = plan
   showStatus({
     type: 'warning',
-    text: 'Plan usuniety. Mozesz cofnac te operacje.',
+    text: 'Plan usunięty. Możesz cofnąć tę operację.',
   })
 }
 
@@ -192,7 +192,7 @@ function undoRemove() {
   lastRemoved.value = null
   showStatus({
     type: 'success',
-    text: 'Cofnieto usuniecie planu.',
+    text: 'Cofnięto usunięcie planu.',
   })
 }
 
@@ -206,7 +206,7 @@ function addSamplePlans() {
   plans.value.push(...samples)
   showStatus({
     type: 'success',
-    text: 'Dodano przykladowe plany nauki.',
+    text: 'Dodano przykładowe plany nauki.',
   })
 }
 
@@ -251,7 +251,7 @@ function formatDate(date) {
         <h1>Planer Nauki</h1>
       </div>
 
-      <nav class="nav" aria-label="Glowne widoki aplikacji">
+      <nav class="nav" aria-label="Główne widoki aplikacji">
         <button
           v-for="view in views"
           :key="view.id"
@@ -280,10 +280,10 @@ function formatDate(date) {
       <section v-if="activeView === 'dashboard'" class="view-grid">
         <div class="intro-panel">
           <p class="eyebrow">Dashboard</p>
-          <h2>Dzisiejszy plan jest pod kontrola</h2>
+          <h2>Dzisiejszy plan jest pod kontrolą</h2>
           <p>
-            Sprawdz najblizsza nauke, dodaj nowy plan albo przejdz do pelnego
-            podsumowania. Najwazniejsze akcje sa widoczne od razu.
+            Sprawdź najbliższą naukę, dodaj nowy plan albo przejdź do pełnego
+            podsumowania. Najważniejsze akcje są widoczne od razu.
           </p>
           <div class="actions">
             <button type="button" class="primary-button" @click="setView('add')">
@@ -297,7 +297,7 @@ function formatDate(date) {
 
         <div class="stats-grid" aria-label="Statystyki planu nauki">
           <article class="stat-tile">
-            <span>Liczba planow</span>
+            <span>Liczba planów</span>
             <strong>{{ plans.length }}</strong>
           </article>
           <article class="stat-tile">
@@ -305,14 +305,14 @@ function formatDate(date) {
             <strong>{{ plannedSubjects }}</strong>
           </article>
           <article class="stat-tile">
-            <span>Laczny czas</span>
+            <span>Łączny czas</span>
             <strong>{{ totalMinutes }} min</strong>
           </article>
         </div>
 
         <section class="content-panel">
           <div class="section-title">
-            <h2>Najblizszy termin</h2>
+            <h2>Najbliższy termin</h2>
             <span v-if="nextPlan" class="badge">{{ nextPlan.priority }}</span>
           </div>
 
@@ -323,8 +323,8 @@ function formatDate(date) {
           </div>
 
           <p v-else class="empty-state">
-            Nie masz jeszcze zaplanowanej nauki. Dodaj pierwszy plan albo uzyj
-            danych przykladowych.
+            Nie masz jeszcze zaplanowanej nauki. Dodaj pierwszy plan albo użyj
+            danych przykładowych.
           </p>
 
           <button
@@ -333,7 +333,7 @@ function formatDate(date) {
             class="secondary-button"
             @click="addSamplePlans"
           >
-            Dodaj przykladowe plany
+            Dodaj przykładowe plany
           </button>
         </section>
       </section>
@@ -343,8 +343,8 @@ function formatDate(date) {
           <p class="eyebrow">Formularz</p>
           <h2>Dodaj plan nauki</h2>
           <p class="helper-text">
-            Pola wymagane sa oznaczone gwiazdka. Komunikaty pod polami pokazuja,
-            jak naprawic blad.
+            Pola wymagane są oznaczone gwiazdką. Komunikaty pod polami pokazują,
+            jak naprawić błąd.
           </p>
 
           <form class="study-form" novalidate @submit.prevent="submitPlan">
@@ -398,7 +398,7 @@ function formatDate(date) {
             <fieldset>
               <legend>Priorytet</legend>
               <div class="segmented-control">
-                <label v-for="priority in ['Niski', 'Sredni', 'Wysoki']" :key="priority">
+                <label v-for="priority in ['Niski', 'Średni', 'Wysoki']" :key="priority">
                   <input v-model="form.priority" type="radio" :value="priority" />
                   <span>{{ priority }}</span>
                 </label>
@@ -417,9 +417,9 @@ function formatDate(date) {
         <aside class="content-panel help-panel">
           <h2>Podpowiedzi</h2>
           <ul>
-            <li>Uzywaj nazw przedmiotow znanych z planu zajec.</li>
-            <li>Wybierz realny termin, aby uniknac planow z przeszlosci.</li>
-            <li>Podziel dlugie tematy na krotsze bloki po 45-60 minut.</li>
+            <li>Używaj nazw przedmiotów znanych z planu zajęć.</li>
+            <li>Wybierz realny termin, aby uniknąć planów z przeszłości.</li>
+            <li>Podziel długie tematy na krótsze bloki po 45-60 minut.</li>
           </ul>
         </aside>
       </section>
@@ -436,7 +436,7 @@ function formatDate(date) {
             class="danger-button"
             @click="clearAllPlans"
           >
-            Wyczysc wszystko
+            Wyczyść wszystko
           </button>
         </div>
 
@@ -451,13 +451,13 @@ function formatDate(date) {
               <small>{{ formatDate(plan.date) }} · {{ plan.duration }} min</small>
             </div>
             <button type="button" class="secondary-button" @click="removePlan(plan.id)">
-              Usun
+              Usuń
             </button>
           </article>
         </div>
 
         <p v-else class="empty-state">
-          Brak zapisanych planow. Przejdz do formularza i dodaj pierwszy wpis.
+          Brak zapisanych planów. Przejdź do formularza i dodaj pierwszy wpis.
         </p>
       </section>
     </main>
